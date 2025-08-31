@@ -17,7 +17,7 @@ This service provides:
 
 ## Architecture
 
-- **Language/Framework**: Python (Flask/FastAPI/Django REST — specify what you used)
+- **Language/Framework**: Python (Flask)
 - **Database**: PostgreSQL
 - **Containerization**: Docker
 - **Orchestration**: Docker Compose (multi-service setup with other components)
