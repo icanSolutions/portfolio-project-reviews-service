@@ -9,11 +9,10 @@ class ReviewSchema(SQLAlchemySchema):
 
     id = auto_field(dump_only=True)
     user_name = auto_field(required=True)
-    price = auto_field(required=True)
     product_id = auto_field(required=True)
     rating = auto_field(required=True)
     comment = auto_field()
-    cretaed_at = auto_field()
+    created_at = auto_field()
     
     
     

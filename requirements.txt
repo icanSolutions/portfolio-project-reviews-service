@@ -11,3 +11,4 @@ factory_boy==3.3.0
 marshmallow-sqlalchemy
 werkzeug<3.0
 alembic
+Flask-Cors

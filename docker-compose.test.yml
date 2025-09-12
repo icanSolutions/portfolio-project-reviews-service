@@ -10,7 +10,7 @@ services:
     build: .
     container_name: reviews_service
     env_file:
-      - .env
+      - .env.test
     ports:
       - "5002:5000"
     volumes:

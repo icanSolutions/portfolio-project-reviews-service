@@ -11,5 +11,4 @@ class Review(db.Model):
     user_name = db.Column(db.String(100), nullable=False)
     rating = db.Column(db.Float)
     comment = db.Column(db.String(255))
-    cretaed_at = db.Column(db.DateTime, default=datetime.now(datetime.UTC), nullable=False)
-            
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)            

@@ -13,6 +13,8 @@ def client():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     with app.app_context():
+        print("DB URL in use:", db.engine.url)
+
         db.drop_all()
         db.create_all()
         yield app.test_client()
@@ -23,7 +25,7 @@ def test_create_a_review(client):
     """Create a new review and test the ststuse code & name"""
     response = client.post("/reviews", json={
         "user_name": "mr ba",
-        "review_id": 2,
+        "product_id": 2,
         "rating": 4,
         "comment": "Great"
     })

@@ -8,10 +8,12 @@ from app.models import db
 load_dotenv()
 
 app = create_app()
+print("DATABASE_URL =", app.config.get("SQLALCHEMY_DATABASE_URI"))
+
 
 
 if __name__ == '__main__':
-    port = int(os.getenv('SERVICE_PORT', 5001))
+    port = int(os.getenv('SERVICE_PORT', 5002))
     if app.config["ENV"] == "development":
         with app.app_context():
             db.create_all()

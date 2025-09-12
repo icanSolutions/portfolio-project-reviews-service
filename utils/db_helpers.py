@@ -1,14 +1,22 @@
 from app.errors import ReviewNotFoundError
 
-def get_or_404(model, obj_id):
-    if obj_id:
-        instance = model.session.get(obj_id)
-        if not instance:
-            raise ReviewNotFoundError(f"{model.__name__} with ID {obj_id} not found")
+def get_or_404(model, obj_id=None, **filters):
+    query = model.query
+
+    # Apply filters if provided
+    if filters:
+        query = query.filter_by(**filters).first()
+
+    # If obj_id is provided, look by primary key
+    if obj_id is not None:
+        instance = query.get(obj_id)
     else:
-        instance = model.query.all()
-        if not instance:
-            raise ReviewNotFoundError(f"{model.__name__}s not found")
+        instance = query.first()
+
+    if not instance:
+        raise ReviewNotFoundError(
+            f"{model.__name__} with filters {filters or {'id': obj_id}} not found"
+        )
     return instance
 
 def get_list_or_404(model, field=None, value=None):
