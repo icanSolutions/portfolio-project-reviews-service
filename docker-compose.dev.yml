@@ -6,7 +6,7 @@ networks:
     external: true
 
 services:
-  products:
+  reviewa:
     build: .
     container_name: reviews_service
     env_file:
