@@ -7,6 +7,9 @@ venv/
 .env
 env*
 *.env
+.env.dev
+.env.test
+.env.prod
 
 # IDE/editor settings
 .vscode/
