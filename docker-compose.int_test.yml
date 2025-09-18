@@ -6,7 +6,7 @@ networks:
 
 services:
   products_service:
-    image: ${{ secrets.DOCKER_USERNAME }}/products-service:latest
+    image: ${PRODUCTS_SERVICE_IMAGE}
     container_name: products_service
     environment:
       - DATABASE_URL=${PRODUCTS_SERVICE_DB_URL}
