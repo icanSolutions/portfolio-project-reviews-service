@@ -8,8 +8,11 @@ services:
   reviews:
     build: .
     container_name: reviews_service
-    env_file:
-      - .env.test
+    environment:
+      - DATABASE_URL=postgresql://test:test@reviews_db:5432/reviews_test_db
+      - FLASK_ENV=testing
+      - FLASK_APP=run.py
+      - DEBUG=true
     networks:
       - backend_network
     depends_on:
