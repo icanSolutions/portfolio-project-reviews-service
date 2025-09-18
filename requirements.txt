@@ -12,3 +12,4 @@ marshmallow-sqlalchemy
 werkzeug<3.0
 alembic
 Flask-Cors
+python-dotenv>=1.0.0

@@ -3,10 +3,10 @@ version: '3.8'
 
 networks:
   backend_network:
-    external: true
+    external: false
 
 services:
-  reviewa:
+  reviews:
     build: .
     container_name: reviews_service
     env_file:
@@ -17,4 +17,23 @@ services:
       - .:/app
     networks:
       - backend_network
+
+  reviews_db:
+    image: postgres:15
+    container_name: reviews_dev_db
+    restart: always
+    env_file:
+      - .env.dev
+    environment:
+      POSTGRES_DB: ${DEV_REVIEWS_DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DEV_REVIEWS_DB_PORT}:5432"
+    volumes:
+      - ./volumes/reviews_db_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
+
+
     
