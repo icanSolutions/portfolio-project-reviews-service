@@ -5,11 +5,24 @@ networks:
     external: false
 
 services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"  # Connection
+      - "15672:15672" # Management
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - backend_network
+
   reviews:
     build: .
     container_name: reviews_service
     environment:
-      - DATABASE_URL=postgresql://test:test@reviews_db:5432/reviews_test_db
+      - DATABASE_URL=${DATABASE_URL}
       - FLASK_ENV=testing
       - FLASK_APP=run.py
       - DEBUG=true
@@ -17,7 +30,8 @@ services:
       - backend_network
     depends_on:
       - reviews_db
-    command: pytest
+      - rabbitmq
+    command: pytest /tests/test_routes.py -v
 
   reviews_db:
     image: postgres:15

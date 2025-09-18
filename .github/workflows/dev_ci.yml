@@ -22,4 +22,7 @@ jobs:
         run: |
           docker compose -f ${{ github.workspace }}/docker-compose.test.yml up --build --abort-on-container-exit --exit-code-from reviews
           docker compose -f ${{ github.workspace }}/docker-compose.test.yml down -v
+        env:
+          DATABASE_URL: ${{ secrets.REVIEWS_SERVICE_TEST_DB_URL }}
+
       
