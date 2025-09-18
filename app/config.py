@@ -5,32 +5,24 @@ class Config:
     ENV = os.getenv('FLASK_ENV', 'production')
     DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
     TESTING = False
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 
 
 
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI = (
-        f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
-        f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
-    )
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     DEBUG = True
 
 
 class TestingConfig(Config):
-    SQLALCHEMY_DATABASE_URI = (
-        f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
-        f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
-    )
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     TESTING = True
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = (
-        f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
-        f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
-    )
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+
 
 
 # Optional: map to easily load based on env var
