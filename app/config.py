@@ -6,6 +6,8 @@ class Config:
     DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
     TESTING = False
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SERVICE_PORT = 5002
+
 
 
 
