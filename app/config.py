@@ -4,7 +4,6 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     ENV = os.getenv('FLASK_ENV', 'production')
     DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
-    TESTING = False
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     SERVICE_PORT = 5002
 

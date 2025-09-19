@@ -32,7 +32,7 @@ services:
       - REVIEWS_SERVICE_URL=${REVIEWS_SERVICE_URL}
       - FLASK_ENV=testing
     ports:
-      - "5000:5000"
+      - "5002:5002"
     networks:
       - backend_network
     depends_on:

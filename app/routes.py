@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from .models import Review, db
+from sqlalchemy import inspect
 from .schema import ReviewSchema
 from utils.db_helpers import get_or_404, get_list_or_404  # Handle product not found 404
 
@@ -10,7 +11,11 @@ bp = Blueprint("routes", __name__)
 # Example route: Health check
 @bp.route('/health', methods=['GET'])
 def health_check():
-    return jsonify({'status': 'reviews-service is healthy'}), 200
+    inspector = inspect(db.engine)
+    if "reviews" in inspector.get_table_names():
+        return jsonify({'status': 'reviews-service is healthy'}), 200
+    else:
+        return jsonify({'status': 'reviews-service DB not ready'}), 503
 
 
 @bp.route("/reviews", methods=["POST"])
