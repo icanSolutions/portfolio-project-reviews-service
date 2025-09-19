@@ -6,17 +6,22 @@ networks:
 
 services:
   products_service:
-    image: ${{ secrets.DOCKER_USERNAME }}/products-service:latest
+    image: 'morbarda/products-service:latest'
     container_name: products_service
     environment:
       - DATABASE_URL=${PRODUCTS_SERVICE_DB_URL}
       - PRODUCTS_SERVICE_URL=${PRODUCTS_SERVICE_URL}
-      - REVIEWS_SERVICE_URL=${REVIEWS_SERVICE_URL}     
+      - REVIEWS_SERVICE_URL=${REVIEWS_SERVICE_URL}
+      - FLASK_ENV=testing
+    ports:
+      - "5001:5001"
     networks:
       - backend_network
     depends_on:
-      - products_db
-      - rabbitmq
+      products_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   reviews_service:
     build: .
@@ -25,11 +30,16 @@ services:
       - DATABASE_URL=${REVIEWS_SERVICE_DB_URL}
       - PRODUCTS_SERVICE_URL=${PRODUCTS_SERVICE_URL}
       - REVIEWS_SERVICE_URL=${REVIEWS_SERVICE_URL}
+      - FLASK_ENV=testing
+    ports:
+      - "5000:5000"
     networks:
       - backend_network
     depends_on:
-      - reviews_db
-      - rabbitmq
+      reviews_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   products_db:
     image: postgres:15
@@ -39,6 +49,11 @@ services:
       POSTGRES_DB: products_test_db
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test -d products_test_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - backend_network
 
@@ -50,6 +65,11 @@ services:
       POSTGRES_DB: reviews_test_db
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test -d reviews_test_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - backend_network
 
@@ -62,20 +82,30 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - backend_network
 
   integration_tests:
     image: python:3.10
+    working_dir: /tests
+    volumes:
+      - ./tests:/tests
+      - ./requirements.txt:/requirements.txt
+    networks:
+      - backend_network
     depends_on:
       - products_service
       - reviews_service
       - products_db
       - reviews_db
       - rabbitmq
-    networks:
-      - backend_network
-    volumes:
-      - ./tests:/tests
-    working_dir: /tests
-    command: ["pytest", "-s", "-v", "integration_test.py"]
+    environment:
+      - PRODUCTS_SERVICE_URL=${PRODUCTS_SERVICE_URL}
+      - REVIEWS_SERVICE_URL=${REVIEWS_SERVICE_URL}
+      - FLASK_ENV=testing
+    command: bash -c "pip install -r /requirements.txt && pytest /tests/integration_test.py -v"
