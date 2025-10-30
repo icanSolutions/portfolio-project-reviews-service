@@ -33,7 +33,6 @@ async def test_products_and_reviews_connection():
             assert res.status == 201
             product = await res.json()
             product_id = product["id"]
-
         # Create a Review for that Product
         review_data = {"user_name": "TestUser", "product_id": product_id, "rating": 5, "comment": "Great!"}
         async with session.post(f"{REVIEWS_SERVICE_URL}/reviews", json=review_data) as res:
@@ -46,5 +45,11 @@ async def test_products_and_reviews_connection():
             assert res.status == 204
 
         # Check that the Review is deleted 
-        async with session.get(f"{REVIEWS_SERVICE_URL}/reviews/{review['id']}") as res:
-            assert res.status == 404  
+        timeout = 10
+        for _ in range(timeout):
+            async with session.get(f"{REVIEWS_SERVICE_URL}/reviews/{review['id']}") as res:
+                if res.status == 404:
+                    break
+            await asyncio.sleep(1)
+        else:
+            assert False, "Review was not deleted after product deletion"
