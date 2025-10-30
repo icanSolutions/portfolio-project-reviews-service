@@ -1,5 +1,5 @@
-from rabbit_consumers.rabbitmq import setup_channel
-from rabbit_consumers.product_events import handle_delete_product
+from app.rabbit_consumers.rabbitmq import setup_channel
+from app.rabbit_consumers.product_events import handle_delete_product
 
 def main():
     connection, channel = setup_channel()
